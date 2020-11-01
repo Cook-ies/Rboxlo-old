@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `forum_hubs` (
 CREATE TABLE IF NOT EXISTS `forum_replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `creator_id` int(11) NOT NULL,
+  `category` int(11) NOT NULL,
   `content` text NOT NULL,
   `thread` int(11) NOT NULL,
   `created` int(11) NOT NULL,

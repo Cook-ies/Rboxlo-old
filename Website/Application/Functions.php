@@ -233,4 +233,14 @@
             "months" => $months
         ];
     }
+
+    function safe_out($string)
+    {
+        return htmlentities($string, ENT_QUOTES, "UTF-8");
+    }
+
+    function safe_echo($string)
+    {
+        echo(safe_out($string));
+    }
 ?>
