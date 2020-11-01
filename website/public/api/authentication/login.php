@@ -1,5 +1,5 @@
 <?php 
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
     header("Content-Type: application/json");
     open_database_connection($sql);
     
@@ -7,9 +7,7 @@
     $success = false;
     $message = "An unexpected error occurred.";
 
-    $error = false; // This variable is set so we don't perform additional checks if we already know that something is invalid.
-                    // However, one issue with this is that we have to have nested if-else cases.
-                    // It sucks, but that's life.
+    $error = false;
                     
     if (!isset($_POST["information"]))
     {
@@ -26,7 +24,7 @@
     if (!$error)
     {
         $information = json_decode($_POST["information"], true);
-
+        
         if ($information["csrf"] !== $_SESSION["csrf"] && !$error)
         {
             $message = "Invalid CSRF token.";
@@ -47,53 +45,42 @@
 
         if (!$error)
         {
-            $statement = $sql->prepare("SELECT * FROM `users` WHERE username = ? OR email = ?");
+            $statement = $sql->prepare("SELECT * FROM `users` WHERE `username` = ? OR `email` = ?");
             $statement->execute([$information["username"], $information["username"]]);
             $result = $statement->fetch(PDO::FETCH_ASSOC);
 
             if ($result)
             {
-                // See if password is old non-crypted password
-                if (!is_base64($result["password"]))
-                {
-                    // Update values to be crypted
-                    $statement = $sql->prepare("UPDATE `users` SET `email` = ?, `password` = ?, `last_ip` = ?, `register_ip` = ? WHERE `id` = ?");
-                    $statement->execute([_crypt($result["email"]), _crypt($result["password"]), _crypt($result["last_ip"]), _crypt($result["register_ip"]), $result["id"]]);
-
-                    // Get new values!
-                    $statement = $sql->prepare("SELECT * FROM `users` WHERE `id` = ?");
-                    $statement->execute([$result["id"]]);
-
-                    $result = $statement->fetch(PDO::FETCH_ASSOC);
-                }
-
                 if (password_verify($information["password"], _crypt($result["password"], "decrypt")))
                 {
-                    // See if password needs rehashing (I didn't use insecure hashing like md5 or sha1, this is to convert Argon2i hashes to Argon2id)
-                    // Check commit history if you're skeptical ¯\_(ツ)_/¯
-                    if (password_get_info(_crypt($result["password"], "decrypt"))["algoName"] !== "argon2id")
+                    // Do we need more money
+                    // PS: We only reward once if it's over like say 2 days. No money stacking :D
+                    if (($result["next_reward"] - time()) >= PROJECT["REWARD"]["TIMEOUT"])
                     {
-                        // Update
-                        $statement = $sql->prepare("UPDATE `users` SET `password` = ? WHERE `id` = ?");
-                        $statement->execute([_crypt(password_hash($information["password"], PASSWORD_ARGON2ID)), $result["id"]]);
+                        $statement = $sql->prepare("UPDATE `users` SET `money` = ?, `next_reward` = ? WHERE `id` = ?");
+                        $statement->execute([(intval($result["money"]) + PROJECT["REWARD"]["AMOUNT"]), (time() + PROJECT["REWARD"]["TIMEOUT"])]);
                     }
 
-                    $_SESSION["user"] = $result;
-                    $_SESSION["user"]["password"] = "";
+                    // Set our last ping time
+                    $last_ping = json_decode($result["last_ping"], true);
+                    $last_ping["website"] = time();
+                    $last_ping = json_encode($last_ping);
 
-                    // Crypt
-                    $_SESSION["user"]["email"] = _crypt($_SESSION["user"]["email"], "decrypt");
-                    $_SESSION["user"]["last_ip"] = _crypt($_SESSION["user"]["last_ip"], "decrypt");
-                    $_SESSION["user"]["register_ip"] = _crypt($_SESSION["user"]["register_ip"], "decrypt");
+                    $statement = $sql->prepare("UPDATE `users` SET `last_ping` = ? WHERE `id` = ?");
+                    $statement->execute([$last_ping]);
+
+                    // Set our session
+                    $_SESSION["user"] = $result;
+                    
+                    // Erase sensitive information from session
+                    $_SESSION["user"]["password"] = "";
+                    $_SESSION["user"]["email"] = "";
+                    $_SESSION["user"]["2fa_secret"] = "";
+                    $_SESSION["user"]["ip_history"] = "";
 
                     // Parse
                     $_SESSION["user"]["permissions"] = json_decode($result["permissions"], true);
                     $_SESSION["user"]["avatar"] = json_decode($result["avatar"], true);
-
-                    if (!file_exists($_SERVER["DOCUMENT_ROOT"] . "/../data/thumbnails/users/" . $_SESSION["user"]["id"] . ".png"))
-                    {
-                        copy($_SERVER["DOCUMENT_ROOT"] . "/../data/thumbnails/users/0.png", $_SERVER["DOCUMENT_ROOT"] . "/../data/thumbnails/users/" . $_SESSION["user"]["id"] . ".png");
-                    }
 
                     $success = true;
                     $message = "Welcome back, ". $result["username"] ."! Redirecting you to your dashboard...";

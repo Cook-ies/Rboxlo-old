@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  website:
+    container_name: "website"
+    build:
+      context: "."
+      dockerfile: "./Dockerfile"
+    env_file:
+      - "./.env"
+    ports:
+      - "80:80"
+    volumes:
+      - "./Website/Container/Website/Data:/var/www/data"
+      - "./Website/Container/Logs/NGINX:/var/log/nginx"
+  database:
+    image: "mariadb"
+    hostname: "database"
+    container_name: "database"
+    command: "--init-file /usr/local/bin/structure.sql"
+    environment:
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - "./Website/Structure.sql:/usr/local/bin/structure.sql"
+    cap_add:
+      - "SYS_NICE"
+  blog:
+    image: "ghost"
+    hostname: "ghost"
+    container_name: "blog"
+    environment:
+      MARIADB_HOST: database
+      MARAIDB_PORT_NUMBER: ${DB_PORT}
+      GHOST_DATABASE_USER: ghost
+      GHOST_DATABASE_NAME: ghost
+      GHOST_HOST: blog.${WEBSITE_DOMAIN}
+      NODE_ENV: production
+    ports:
+      - "2368:2368"
+    volumes:
+      - "./Website/Container/Blog:/bitnami"
+    depends_on:
+      - database
+  mailserver:
+    image: "tvial/docker-mailserver:latest"
+    hostname: "mailserver"
+    container_name: "mailserver"
+    domainname: ${WEBSITE_DOMAIN}
+    environment:
+      MAIL_USER: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+    ports:
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "993:993"
+    volumes:
+      - "./Website/Container/Mailserver/Configuration:/tmp/docker-mailserver/"
+      - "./Website/Container/Mailserver/Data:/var/mail"
+      - "./Website/Container/Mailserver/State:/var/mail-state"
+      - "./Website/Container/Logs/Mailserver:/var/log/mail"
+    cap_add:
+      - "NET_ADMIN"
+      - "SYS_PTRACE"

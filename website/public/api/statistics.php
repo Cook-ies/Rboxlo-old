@@ -1,5 +1,5 @@
 <?php
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
 
     header("Content-Type: text/plain");
     

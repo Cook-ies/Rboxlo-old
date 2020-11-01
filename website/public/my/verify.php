@@ -1,6 +1,6 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../data/environment/email.environment.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Environment/Email.php");
 
 	if (!isset($_SESSION["user"]))
 	{
@@ -124,7 +124,7 @@
 						<br><br>
 						Fortunately for you, we at <?= PROJECT["NAME"] ?> have made the process of verifying your E-Mail address very simple. Just click that big purple button below, solve the captcha, and it'll send you a verification message to the E-Mail address you signed up with. Simply click on the link sent in that E-Mail, and you're done!
 						<br><br>
-						If you can't find the E-Mail in your main inbox, search for <?= EMAIL["ADDRESS"] ?> in all inboxes or check your spam folder for incoming messages from <?= ENVIRONMENT["PROJECT"]["NAME"] ?>. If neither of those work, just re-send the E-Mail by clicking the purple button again.
+						If you can't find the E-Mail in your main inbox, search for <?= EMAIL["ADDRESS"] ?> in all inboxes or check your spam folder for incoming messages from <?= PROJECT["NAME"] ?>. If neither of those work, just re-send the E-Mail by clicking the purple button again.
 					</p>
 
 					<br>

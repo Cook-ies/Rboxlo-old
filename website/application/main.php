@@ -7,6 +7,8 @@
         }
     }
 
+    date_default_timezone_set(PROJECT["TIMEZONE"]);
+    
     // The cookie's name is random so that there is no "PHPSESSID" stealer
     session_name(strtolower(PROJECT["NAME"]) . "_session");
 
@@ -31,29 +33,6 @@
         session_start();
 
         $_SESSION["ip"] = get_user_ip();
-    }
-
-    // .ROBLOSECURITY is tied to the session, but does not have session "logged in" details
-    // ROBLOSECURITY is also required for some Roblox client related stuffs
-    if (!isset($_SESION["roblox"]) || empty($_SESSION["roblox"]))
-    {
-        $_SESSION["roblox"] = strtoupper(bin2hex(random_bytes(1170)));
-    }
-    
-    if (!isset($_COOKIE[".ROBLOSECURITY"]))
-    {
-        setcookie(".ROBLOSECURITY", $_SESSION["roblox"], ["secure" => true, "httponly" => true, "samesite" => "Lax"]);
-        $_COOKIE["ROBLOSECURITY"] = $_SESSION["roblox"];
-    }
-    else
-    {
-        if ($_SESSION["roblox"] !== $_COOKIE["ROBLOSECURITY"])
-        {
-            // regen
-            $_SESSION["roblox"] = strtoupper(bin2hex(random_bytes(1170)));
-            setcookie(".ROBLOSECURITY", $_SESSION["roblox"], ["secure" => true, "httponly" => true, "samesite" => "Lax"]);
-            $_COOKIE["ROBLOSECURITY"] = $_SESSION["roblox"];
-        }
     }
 
     if (!PROJECT["DEBUGGING"])
@@ -82,7 +61,7 @@
         ini_set("display_startup_errors", 1);
         error_reporting(E_ALL);
     }
-
+    
     if (!isset($_SESSION["csrf"]) || empty($_SESSION["csrf"]))
     {
         $_SESSION["csrf"] = hash("sha256", bin2hex(random_bytes(64)));

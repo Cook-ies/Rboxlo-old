@@ -1,5 +1,5 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -19,7 +19,7 @@
         <div class="jumbotron card card-image" style="background-image: url(/html/img/backdrops/about.png)">
             <div class="text-white text-center">
                 <div>
-					<img src="/html/img/logos/2016/full.png" class="img-fluid" style="width: 600px">
+					<img src="/html/img/brand/big.png" class="img-fluid" style="width: 600px">
 					<br>
 					<h1 class="card-title h1-responsive">Terms of Service</h1>
                 </div>
@@ -44,7 +44,7 @@
                             <li><b>Don't use slurs.</b> The definition of slur is extensive, but should you question if it's a slur or not, it's probably not allowed.</li>
                             <li><b>No NSFW content.</b> Please. This means stuff such as pornographic content, gore, yiff, lewd content, etc.</li>
 							<li><b>Don't be a jerk.</b> Be a kind person.</li>
-							<li><b>Do not sexualize minors.</b> Even as a joke, doing so is disgusting, and is absolutely forbidden. <b>This is a no tolerance policy.</b></li>
+							<li><b>Do not sexualize minors.</b> Even as a joke, doing so is disgusting, and is not allowed.</li>
 							<li><b>Do not remove the Watchdog system.</b> Watchdog is only used in rare scenarios where an admin cannot join a game to moderate.</li>
                         </ul>
 					</p>

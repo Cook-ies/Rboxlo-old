@@ -1,5 +1,5 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
 	
 	if (!PROJECT["PRIVATE"]["IMPLICATION"])
 	{
@@ -77,7 +77,7 @@
 								endif;
 							?>
 
-							<div class="g-recaptcha" data-sitekey="<?= GOOGLE["RECAPTCHA"]["PUBLIC_KEY"] ?>" data-size="invisible"></div>
+							<div class="g-recaptcha" ></div>
 									
 							<div class="form-check">
 								<input type="checkbox" class="register-checkbox form-check-input" id="13confirm" required="required">
@@ -86,13 +86,13 @@
 
 							<div class="form-check">
 								<input type="checkbox" class="register-checkbox form-check-input" id="read_documents" required="required">
-								<label class="form-check-label" for="read_documents">I have read and agree to the <a href="/about/terms-of-service">Terms of Service</a> and the <a href="/about/privacy-policy">Privacy Policy</a></label>
+								<label class="form-check-label" for="read_documents">I have read and agree to the <a href="/about/terms-of-service">Terms of Service</a> and the <a href="/about/privacy">Privacy Policy</a></label>
 							</div>
 									
 							<br>
 								
 							<div class="text-center mb-2 mt-0 pt-0">
-								<button type="submit" id="submit" class="register-input btn purple-gradient accent-1 btn-block btn-rounded z-depth-1a waves-effect waves-light" name="submit">Sign Up</button>
+								<button type="submit" id="submit" class="register-input btn purple-gradient accent-1 btn-block btn-rounded z-depth-1a waves-effect waves-light g-recaptcha" name="submit" data-sitekey="<?= GOOGLE["RECAPTCHA"]["PUBLIC_KEY"] ?>" data-callback="submit">Sign Up</button>
 							</div>
 						</form>
 					</div>
@@ -108,7 +108,7 @@
 			build_footer();
 		?>
 
-		<script type="text/javascript" src="<?= get_server_host() ?>/html/js/register.min.js" async defer></script>
-		<script type="text/javascript" src="https://www.google.com/recaptcha/api.js" async defer></script>
+		<script type="text/javascript" src="<?= get_server_host() ?>/html/js/register.min.js"></script>
+		<script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 	</body>
 </html>

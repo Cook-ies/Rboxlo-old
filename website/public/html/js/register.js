@@ -1,5 +1,9 @@
-function submitRegister()
+function submit()
 {
+    $(".register-checkbox").attr("disabled", "disabled")
+    $(".register-input").attr("readonly, readonly")
+    $(".register-input").attr("disabled", "disabled")
+
     var information = {
         username: $("#username").val(),
         password: $("#password").val(),
@@ -46,12 +50,8 @@ $('form input:not([type="submit"])').keypress(function (e)
 $(function()
 {
     $("#register-form").on("submit", function(e) {
-        $(".register-checkbox").attr("disabled", "disabled")
-        $(".register-input").attr("readonly, readonly")
-        $(".register-input").attr("disabled", "disabled")
-
         e.preventDefault()
-        grecaptcha.execute()
-        submitRegister()
     })
 })
+
+window.submit = submit

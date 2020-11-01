@@ -1,5 +1,5 @@
 <?php
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/rbx.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/RBX.php");
     open_database_connection($sql);
     header("Content-Type: application/json");
 
@@ -18,7 +18,7 @@
         exit("No user exists under that userId");
     }
 
-    $avatar = json_decode($result, true);
+    $avatar = json_decode($result["avatar"], true);
 
     // Fetch backpack
     $statement = $GLOBALS["sql"]->prepare("SELECT `asset_id` FROM `owned_items` WHERE `type` = 'gear' AND `owner_id` = ?");

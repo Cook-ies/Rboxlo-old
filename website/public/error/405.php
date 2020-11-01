@@ -1,5 +1,5 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
 	http_response_code(405);
 ?>
 
@@ -32,7 +32,7 @@
                     </div>
 
 					<div class="modal-footer mx-5 pt-3 mb-1">
-						<button class="btn purple-gradient accent-1 btn-block btn-rounded z-depth-1a waves-effect waves-light" onclick="window.location.href = '/'">Go home</button>
+						<button class="btn purple-gradient accent-1 btn-block btn-rounded z-depth-1a waves-effect waves-light" onclick="window.history.back()">Go back</button>
 					</div>
 				</div>
 			</div>

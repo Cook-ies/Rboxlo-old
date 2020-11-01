@@ -1,17 +1,21 @@
 <?php
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/rbx.php");
-
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/RBX.php");
     header("Content-Type: application/json");
-
+    
     // unlike other Settings/QuietGet endpoints, this *will* check if there is an apiKey
     // if there isn't, it errors
-    
-    $key = get_api_key($_GET["apiKey"]);
 
-    if (!$key || $key["usage"] !== "get_rccservice_settings")
+    $version = "2017"; // default
+    
+    if (isset($_GET["apiKey"]))
     {
-        exit("Invalid API key");
+        $key = get_api_key_info($_GET["apiKey"]);
+        $version = $key["version"] ?? $version;
+    }
+    else
+    {
+        exit(json_encode(["success" => false, "message" => "Invalid API key"]));
     }
 
-    exit(get_fflags($key["version"], "RCCService"));
+    exit(get_fflags($version, "RCCService"));
 ?>

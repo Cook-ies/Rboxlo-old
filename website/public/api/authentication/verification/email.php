@@ -1,9 +1,10 @@
 <?php
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Environment/Email.php");
 
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/submodules/phpmailer/src/Exception.php");
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/submodules/phpmailer/src/PHPMailer.php");
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/submodules/phpmailer/src/SMTP.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Submodules/PHPMailer/src/Exception.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Submodules/PHPMailer/src/PHPMailer.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Submodules/PHPMailer/src/SMTP.php");
 
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
@@ -15,9 +16,7 @@
     $success = false;
     $message = "An unexpected error occurred.";
 
-    $error = false; // This variable is set so we don't perform additional checks if we already know that something is invalid.
-                    // However, one issue with this is that we have to have nested if-else cases.
-                    // It sucks, but that's life.
+    $error = false;
 
     if (!isset($_POST["information"]))
     {
@@ -85,22 +84,22 @@
 
             $mail->isSMTP();
             $mail->SMTPDebug = SMTP::DEBUG_OFF;
-            $mail->Host = ENVIRONMENT["EMAIL"]["SERVER"]["ADDRESS"];
-            $mail->Port = ENVIRONMENT["EMAIL"]["SERVER"]["PORT"];
+            $mail->Host = "mailserver";
+            $mail->Port = 587;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->SMTPAuth = true;
-            $mail->Username = ENVIRONMENT["EMAIL"]["ADDRESS"];
-            $mail->Password = ENVIRONMENT["EMAIL"]["PASSWORD"];
+            $mail->Username = EMAIL["USERNAME"];
+            $mail->Password = EMAIL["PASSWORD"];
                 
-            $mail->setFrom(ENVIRONMENT["EMAIL"]["ADDRESS"], ENVIRONMENT["PROJECT"]["NAME"]);
-            $mail->addReplyTo(ENVIRONMENT["EMAIL"]["ADDRESS"], ENVIRONMENT["PROJECT"]["NAME"]);
+            $mail->setFrom(EMAIL["USERNAME"], PROJECT["NAME"]);
+            $mail->addReplyTo(EMAIL["USERNAME"], PROJECT["NAME"]);
 
             $mail->addAddress($email, $user_email_alias);
 
-            $mail->Subject = ENVIRONMENT["PROJECT"]["NAME"] . " Verification for ". $_SESSION["user"]["username"];
+            $mail->Subject = PROJECT["NAME"] . " Verification for ". $_SESSION["user"]["username"];
 
             $mail->msgHTML(
-                "<h3>". ENVIRONMENT["PROJECT"]["NAME"] ."</h3><br>Hi ". $_SESSION["user"]["username"] .", please verify your E-Mail address at <a href=\"$verification_url\">$verification_url</a>.<br> Not ". $_SESSION["user"]["username"] ."? Ignore this message."
+                "<h3>". PROJECT["NAME"] ."</h3><br>Hi ". $_SESSION["user"]["username"] .", please verify your E-Mail address at <a href=\"$verification_url\">$verification_url</a>.<br> Not ". $_SESSION["user"]["username"] ."? Ignore this message."
             );
 
             if ($mail->send())
@@ -145,8 +144,12 @@
                     $elapsed = time() - $result["generated"];
                     if ($elapsed >= 900) // If 15 minutes have elapsed since token generation
                     {
-                        $message = "That verification token has expired (15 minute timeout.) Please use a new one.";
+                        $message = "That verification token has expired (15 minute timeout.) Please generate a new one.";
                         $error = true;
+
+                        // We should also delete this token
+                        $statement = $sql->prepare("DELETE FROM `email_verification_tokens` WHERE `token` = ?");
+                        $statement->execute([$information["token"]]);
                     }
 
                     // passed all checks - do this:
@@ -157,8 +160,8 @@
                         $statement = $sql->prepare("UPDATE `users` SET `email_verified` = 1 WHERE `id` = ?");
                         $statement->execute([$result["uid"]]);
 
-                        $statement = $sql->prepare("DELETE FROM `email_verification_tokens` WHERE `generated` = ?");
-                        $statement->execute([$result["generated"]]);
+                        $statement = $sql->prepare("DELETE FROM `email_verification_tokens` WHERE `token` = ?");
+                        $statement->execute([$information["token"]]);
                         $_SESSION["user"]["email_verified"] = true;
 
                         $message = "Successfully verified user! Redirecting you back to your dashboard...";

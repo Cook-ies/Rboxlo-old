@@ -1,18 +1,13 @@
 <?php
-    require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/rbx.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/RBX.php");
     header("Content-Type: application/json");
-
-    $version = "2017";
     
-    if (isset($_GET["apiKey"])) // so we can get version, else default to 2017
+    $version = "2017"; // default
+    
+    if (isset($_GET["apiKey"]))
     {
-        $key = get_api_key($_GET["apiKey"]);
-        if (!$key || $key["usage"] !== "get_client_settings")
-        {
-            exit("Invalid API key");
-        }
-
-        $version = $key["version"];
+        $key = get_api_key_info($_GET["apiKey"]);
+        $version = $key["version"] ?? $version;
     }
 
     exit(get_fflags($version, "ClientAppSettings"));

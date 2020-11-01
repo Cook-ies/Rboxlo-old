@@ -1,5 +1,5 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
 	
 	// If the user is logged in, redirect them to their dashboard from the landing page
 	if (isset($_SESSION["user"]))
@@ -16,7 +16,7 @@
 			build_header("Landing");
 		?>
 		<meta property="og:title" content="<?= PROJECT["NAME"] ?>">
-		<meta property="og:image" content="<?= get_server_host() ?>/html/img/backdrops/default_compressed.png">
+		<meta property="og:image" content="<?= get_server_host() ?>/html/img/backdrops/about.png">
 		<meta property="og:image:type" content="image/png">
 		<meta property="og:description" content="<?= PROJECT["NAME"] ?> is a recreation of a very popular online brick building game. Only <?= PROJECT["NAME"] ?> allows you to relive childhood memories, create amazing games, and have fun all at the same time. Sign up now!">
 	</head>
@@ -28,9 +28,9 @@
 		<div class="container">
 			<div class="row<?php if (!PROJECT["PRIVATE"]["IMPLICATION"]): ?> flex-center<?php endif; ?>">
 				<div class="col-md-6 text-center text-md-left mb-5">
-                    <h1><img src="/html/img/logos/2016/full.png" class="img-fluid" width="500" alt="<?= PROJECT["NAME"] ?>"></h1><hr>
+                    <h1><img src="/html/img/brand/big.png" class="img-fluid" width="500" alt="<?= PROJECT["NAME"] ?>"></h1><hr>
 					<h6 style="line-height: 1.5em"><?= PROJECT["NAME"] ?> is a recreation of a very popular online brick building game. Only <?= PROJECT["NAME"] ?> allows you to relive childhood memories, create amazing games, and have fun all at the same time.</h6><br>
-					<div class="embed-container"><iframe src="https://www.youtube.com/embed/Q8hp2IkI2es" frameborder="0" allowfullscreen></iframe></div>
+					<div class="embed-container"><iframe src="https://www.youtube.com/embed/xd" frameborder="0" allowfullscreen></iframe></div>
 				</div>
 
 				<?php
@@ -87,8 +87,6 @@
 									endif;
 								?>
 
-								<div class="g-recaptcha" data-sitekey="<?= GOOGLE["RECAPTCHA"]["PUBLIC_KEY"] ?>" data-size="invisible"></div>
-								
 								<div class="form-check">
 									<input type="checkbox" class="register-checkbox form-check-input" id="13confirm" required="required">
 									<label class="form-check-label" for="13confirm">I am 13 years old or older</label>
@@ -102,7 +100,7 @@
 								<br>
 							
 								<div class="text-center mb-2 mt-0 pt-0">
-									<button type="submit" id="submit" class="register-input btn purple-gradient accent-1 btn-block btn-rounded z-depth-1a waves-effect waves-light" name="submit">Sign Up</button>
+									<button type="submit" id="submit" class="register-input btn purple-gradient accent-1 btn-block btn-rounded z-depth-1a waves-effect waves-light g-recaptcha" name="submit" data-sitekey="<?= GOOGLE["RECAPTCHA"]["PUBLIC_KEY"] ?>" data-callback="submit">Sign Up</button>
 								</div>
 							</form>
 						</div>
@@ -123,7 +121,7 @@
 			build_footer();
 		?>
 
-		<script type="text/javascript" src="<?= get_server_host() ?>/html/js/register.min.js" async defer></script>
-		<script type="text/javascript" src="https://www.google.com/recaptcha/api.js" async defer></script>
+		<script type="text/javascript" src="<?= get_server_host() ?>/html/js/register.min.js"></script>
+		<script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 	</body>
 </html>

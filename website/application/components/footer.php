@@ -1,6 +1,6 @@
 <footer class="page-footer center-on-small-only stylish-color-dark">
 	<div class="container pt-3 pb-4">
-		<img src="<?= get_server_host() ?>/html/img/logos/2016/full.png" align="center" class="mx-auto d-block mb-3 mt-0 img-fluid" width="200" >
+		<img src="<?= get_server_host() ?>/html/img/brand/big.png" align="center" class="mx-auto d-block mb-3 mt-0 img-fluid" width="200" >
 		<hr class="border-light-grey">
 
 		<ul class="nb-ul list-group list-group-horizontal nav">
@@ -24,13 +24,9 @@
 
 <?php
 	build_js();
-?>
-
-<!-- Begin consent documents -->
-<?php
+	
     if (!isset($_COOKIE["consent"]) || empty($_COOKIE["consent"]) || $_COOKIE["consent"] != "true" || $_COOKIE["consent"] != true)
     {
-        require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/components/consent.php");
+        require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Components/Consent.php");
     }
 ?>
-<!-- End consent documents -->

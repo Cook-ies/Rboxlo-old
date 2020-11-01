@@ -22,6 +22,30 @@
         exit();
     }
 
+    function parse_response_headers($headers)
+    {
+        $head = [];
+        foreach ($headers as $key => $value)
+        {
+            $type = explode(":", $value, 2);
+
+            if (isset($type[1]))
+            {
+                $head[trim($type[0])] = trim($type[1]);
+            }
+            else
+            {
+                $head[] = $value;
+                if (preg_match("#HTTP/[0-9\.]+\s+([0-9]+)#", $value, $out))
+                {
+                    $head["reponse_code"] = intval($out[1]);
+                }
+            }
+        }
+
+        return $head;
+    }
+
     function milliseconds()
     {
         $micro = explode(" ", microtime());
@@ -54,7 +78,7 @@
 
     function _crypt($string, $mode = "encrypt")
     {
-        require_once($_SERVER["DOCUMENT_ROOT"] . "/../data/environment/security.environment.php");
+        require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Environment/Security.php");
 
         $key = hash(SECURITY["CRYPT"]["HASHING"], SECURITY["CRYPT"]["KEY"]);
 
@@ -191,5 +215,22 @@
         $google_response = json_decode(file_get_contents($url, false, $context), true);
 
         return isset($google_response["success"]) && $google_response["success"] === true;
+    }
+
+    function seconds2human($time)
+    {
+        $seconds = $time % 60;
+        $minutes = floor(($time % 3600) / 60);
+        $hours = floor(($time % 86400) / 3600);
+        $days = floor(($time % 2592000) / 86400);
+        $months = floor($time / 2592000);
+
+        return [
+            "seconds" => $seconds,
+            "minutes" => $minutes,
+            "hours" => $hours,
+            "days" => $days,
+            "months" => $months
+        ];
     }
 ?>

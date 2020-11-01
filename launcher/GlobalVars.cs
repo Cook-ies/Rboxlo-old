@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RboxloLauncher
+namespace Rboxlo.Launcher
 {
+    /// <summary>
+    /// Global variables shared throughout the program
+    /// </summary>
     public class GlobalVars
     {
         public static string[] Arguments;

@@ -20,8 +20,9 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
+using Microsoft.Win32;
 
-namespace RboxloLauncher
+namespace Rboxlo.Launcher
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -38,7 +39,36 @@ namespace RboxloLauncher
             InitializeComponent();
             ConnectRboxlo();
         }
+        
+        /// <summary>
+        /// Adds the Rboxlo program to the users Registry, thereby creating an option to uninstall Rboxlo through the Control Panel. 
+        /// </summary>
+        /// <param name="icon">Sets the icon of the program in the Control Panel. Path to an ".ico" file</param>
+        /// <param name="location">The path/folder where the program is being installed</param>
+        /// <param name="uninstall">Command line arguments to uninstall the program</param>
+        private void AddToRegistry(string icon, string location, string uninstall)
+        {
+            DateTime now = DateTime.Today;
+            int install = Convert.ToInt32(now.ToString("yyyymmdd"));
 
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Rboxlo");
+            key.SetValue( "DisplayIcon",     icon,      RegistryValueKind.String );
+            key.SetValue( "DisplayName",     "Rboxlo",  RegistryValueKind.String );
+            key.SetValue( "InstallDate",     install,   RegistryValueKind.String );
+            key.SetValue( "InstallLocation", location,  RegistryValueKind.String );
+            key.SetValue( "NoModify",        1,         RegistryValueKind.DWord  );
+            key.SetValue( "NoRepair",        1,         RegistryValueKind.DWord  );
+            key.SetValue( "Publisher",       "Rboxlo",  RegistryValueKind.String );
+            key.SetValue( "UninstallString", uninstall, RegistryValueKind.String );
+            key.SetValue( "URLInfoAbout",    BaseUrl,   RegistryValueKind.String );
+            key.Close();
+        }
+
+        /// <summary>
+        /// Gets a sha256 hash of a file
+        /// </summary>
+        /// <param name="fileName">Path to the file</param>
+        /// <returns></returns>
         private string GetSha256Hash(string fileName)
         {
             FileStream filestream;
@@ -51,6 +81,10 @@ namespace RboxloLauncher
             return BitConverter.ToString(hashValue).Replace("-", String.Empty).ToLower();
         }
 
+        /// <summary>
+        /// Fails the launch/setup process by changing the icon to an error and hiding the progress bar. However, this does *not* halt the program, and only displays an error message
+        /// </summary>
+        /// <param name="message">Error message to display</param>
         private void FailSetup(string message)
         {
             StatusText.Content = message;
@@ -58,6 +92,9 @@ namespace RboxloLauncher
             StatusImage.Source = Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Error.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
 
+        /// <summary>
+        /// Part of the shared setup and launching process. Attempts to connect to the website. Determines if we have an internet connection, and if the website is up.
+        /// </summary>
         private void ConnectRboxlo()
         {
             bool succeeded = false;
@@ -82,6 +119,9 @@ namespace RboxloLauncher
             }
         }
 
+        /// <summary>
+        /// Second step of shared setup/launching process. This is where the setup/launching process splits
+        /// </summary>
         private void InitializeRboxlo()
         {
             // See our directory
@@ -107,7 +147,7 @@ namespace RboxloLauncher
                 // Verify that we got the valid launcher
                 if ((string)details["launcher"] != GetSha256Hash(LocalApplicationData + @"\Rboxlo\RboxloLauncher.exe"))
                 {
-                    FailSetup("Failed to verify integrity of downloaded launcher.");
+                    FailSetup("Failed to verify integrity.");
                     succeeded = false;
                 }
 
@@ -125,13 +165,16 @@ namespace RboxloLauncher
                 }
             }
 
+            // Lets check our arguments.
             if (GlobalVars.Arguments.Length > 0)
             {
-                // There are some arguments, lets see them
 
             }
         }
 
+        /// <summary>
+        /// Event handler for CancelButton
+        /// </summary>
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();

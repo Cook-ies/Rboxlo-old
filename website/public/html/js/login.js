@@ -1,4 +1,4 @@
-function submitLogin()
+function submit()
 {
     var information = {
         username: $("#username").val(),
@@ -46,6 +46,6 @@ $(function()
         $(".login-input").attr("disabled", "disabled")
 
         e.preventDefault()
-        submitLogin()
+        submit()
     })
 })

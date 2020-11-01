@@ -1,5 +1,5 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../application/includes.php");
+	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -19,7 +19,7 @@
         <div class="jumbotron card card-image" style="background-image: url(/html/img/backdrops/about.png)">
             <div class="text-white text-center">
                 <div>
-					<img src="/html/img/logos/2016/full.png" class="img-fluid" style="width: 600px">
+					<img src="/html/img/brand/big.png" class="img-fluid" style="width: 600px">
 					<br>
 					<h1 class="card-title h1-responsive">About Us</h1>
                 </div>

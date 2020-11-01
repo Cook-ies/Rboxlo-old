@@ -1,0 +1,1 @@
+(Get-Content api-keys.sample.json) | foreach { $_ -replace "00000000-0000-0000-0000-000000000000", [guid]::NewGuid().ToString().ToUpper() } | Set-Content api-keys.json

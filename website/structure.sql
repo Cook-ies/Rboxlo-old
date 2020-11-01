@@ -1,312 +1,174 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+CREATE DATABASE IF NOT EXISTS `rboxlo`;
+USE `rboxlo`;
 
-CREATE TABLE `api_keys` (
-  `id` int(11) NOT NULL,
-  `version` text NOT NULL,
-  `usage` text NOT NULL,
-  `key` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `client_versions`
---
-
-CREATE TABLE `client_versions` (
-  `id` int(11) NOT NULL,
-  `year` text NOT NULL,
-  `textual_version` text NOT NULL,
-  `player_hash` text NOT NULL,
-  `latest` tinyint(4) NOT NULL,
-  `released` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `email_verification_keys`
---
-
-CREATE TABLE `email_verification_keys` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `api_keys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `key` text NOT NULL,
-  `uid` int(11) NOT NULL,
-  `generated` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `usage` text NOT NULL,
+  `client_version` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `email_verification_tokens`
---
+CREATE TABLE IF NOT EXISTS `assets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hash` text NOT NULL,
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`history`)),
+  `type` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `email_verification_tokens` (
-  `id` int(11) NOT NULL,
-  `token` text NOT NULL,
-  `uid` int(11) NOT NULL,
-  `generated` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ban_articles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `moderator` int(11) NOT NULL,
+  `reason` text NOT NULL,
+  `description` text NOT NULL,
+  `evidence` text NOT NULL,
+  `internal_note` text NOT NULL,
+  `expiration` int(11) NOT NULL DEFAULT -1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Table structure for table `friends`
---
 
-CREATE TABLE `friends` (
-  `id` int(11) NOT NULL,
-  `sender_uid` int(11) NOT NULL,
-  `recipient_uid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `forum_categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hub` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `games`
---
-
-CREATE TABLE `games` (
-  `id` int(11) NOT NULL,
-  `place_id` text NOT NULL,
-  `guid` text NOT NULL,
+CREATE TABLE IF NOT EXISTS `forum_hubs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS `forum_replies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `creator_id` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `thread` int(11) NOT NULL,
   `created` int(11) NOT NULL,
-  `last_updated` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `locked` int(11) NOT NULL,
+  `pinned` int(11) NOT NULL,
+  `upvotes` int(11) NOT NULL,
+  `downvotes` int(11) NOT NULL,
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`history`)),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `game_counted_statistics`
---
+CREATE TABLE IF NOT EXISTS `forum_threads` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `creator_id` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `content` text NOT NULL,
+  `category` int(11) NOT NULL,
+  `created` int(11) NOT NULL,
+  `locked` int(11) NOT NULL DEFAULT 0,
+  `pinned` int(11) NOT NULL DEFAULT 0,
+  `upvotes` int(11) NOT NULL DEFAULT 0,
+  `downvotes` int(11) NOT NULL DEFAULT 0,
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`history`)),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `game_counted_statistics` (
-  `id` int(11) NOT NULL,
-  `version` text NOT NULL,
-  `name` text NOT NULL,
-  `count` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `games` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `privileges` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`privileges`)),
+  `start_place` int(11) NOT NULL,
+  `client_version` int(11) NOT NULL,
+  `uuid` text NOT NULL,
+  `publicity` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Table structure for table `game_tokens`
---
 
-CREATE TABLE `game_tokens` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `join_tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `token` text NOT NULL,
   `generated` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `game_id` int(11) NOT NULL,
   `place_id` int(11) NOT NULL,
+  `attributes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`attributes`)),
+  PRIMARY KEY(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS `jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` text NOT NULL,
+  `players` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`players`)),
+  `instance` text NOT NULL,
+  `last_ping` int(11) NOT NULL,
+  `port` int(11) NOT NULL,
+  `place` int(11) NOT NULL,
   `ip` text NOT NULL,
-  `port` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `invite_keys`
---
-
-CREATE TABLE `invite_keys` (
-  `id` int(11) NOT NULL,
-  `uses` int(11) NOT NULL DEFAULT 0,
-  `max_uses` int(11) NOT NULL DEFAULT 1,
-  `key` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `news`
---
-
-CREATE TABLE `news` (
-  `id` int(11) NOT NULL,
-  `color` tinytext NOT NULL,
-  `message` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `places`
---
-
-CREATE TABLE `places` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `places` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` int(11) NOT NULL,
+  `uuid` int(11) NOT NULL,
   `name` text NOT NULL,
-  `creator` int(11) NOT NULL,
+  `description` text NOT NULL,
+  `thumbnails` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`thumbnails`)),
+  `genre` int(11) NOT NULL,
+  `max_players` int(11) NOT NULL,
+  `copylocked` int(11) NOT NULL,
+  `gear_types` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`gear_types`)),
   `created` int(11) NOT NULL,
   `last_updated` int(11) NOT NULL,
+  `trusted` int(11) NOT NULL DEFAULT 0,
+  `chat_style` int(11) NOT NULL DEFAULT 0,
+  `fee` int(11) NOT NULL DEFAULT 0,
+  `private_servers` int(11) NOT NULL DEFAULT 0,
+  `private_servers_fee` int(11) NOT NULL DEFAULT 0,
+  `visits` int(11) NOT NULL DEFAULT 0,
+  `upvotes` int(11) NOT NULL DEFAULT 0,
+  `downvotes` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE IF NOT EXISTS `servers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `name` text NOT NULL,
   `description` text NOT NULL,
-  `chat_style` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `players` int(11) NOT NULL,
+  `port` int(11) NOT NULL,
+  `ip` text NOT NULL,
+  `client_version` int(11) NOT NULL,
+  `is_private` int(11) NOT NULL DEFAULT 0,
+  `private_key` text NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` text NOT NULL,
   `password` text NOT NULL,
   `email` text NOT NULL,
-  `register_ip` text NOT NULL,
-  `last_ip` text NOT NULL,
-  `money` bigint(20) NOT NULL DEFAULT 100,
-  `joindate` int(11) NOT NULL,
-  `avatar` text NOT NULL,
-  `email_verified` tinyint(4) NOT NULL DEFAULT 0,
-  `preferences` text NOT NULL,
-  `last_reward` int(11) NOT NULL,
-  `permissions` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `api_keys`
---
-ALTER TABLE `api_keys`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `client_versions`
---
-ALTER TABLE `client_versions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `email_verification_keys`
---
-ALTER TABLE `email_verification_keys`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `email_verification_tokens`
---
-ALTER TABLE `email_verification_tokens`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `games`
---
-ALTER TABLE `games`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `game_counted_statistics`
---
-ALTER TABLE `game_counted_statistics`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `game_tokens`
---
-ALTER TABLE `game_tokens`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `invite_keys`
---
-ALTER TABLE `invite_keys`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `news`
---
-ALTER TABLE `news`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `places`
---
-ALTER TABLE `places`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `api_keys`
---
-ALTER TABLE `api_keys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `client_versions`
---
-ALTER TABLE `client_versions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `email_verification_keys`
---
-ALTER TABLE `email_verification_keys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `email_verification_tokens`
---
-ALTER TABLE `email_verification_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `games`
---
-ALTER TABLE `games`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `game_counted_statistics`
---
-ALTER TABLE `game_counted_statistics`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `game_tokens`
---
-ALTER TABLE `game_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `invite_keys`
---
-ALTER TABLE `invite_keys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `news`
---
-ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `places`
---
-ALTER TABLE `places`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
+  `created` int(11) NOT NULL,
+  `next_reward` int(11) NOT NULL,
+  `last_ping` longtext NOT NULL,
+  `permissions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`permissions`)),
+  `preferences` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`preferences`)),
+  `avatar` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`avatar`)),
+  `ip_history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`ip_history`)),
+  `email_verified` int(11) NOT NULL DEFAULT 0,
+  `2fa_secret` longtext NOT NULL DEFAULT '0',
+  `banned` int(11) NOT NULL DEFAULT 0,
+  `current_ban_article` int(11) NOT NULL DEFAULT 0,
+  `money` int(11) NOT NULL DEFAULT 25,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,10 +1,5 @@
-<!-- Consent form begin -->
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 <script type="text/javascript">
-    function agreeToConsent()
-    {
-        Cookies.set("consent", true, { expires: 2147483647 });
-    }
+    function agreeToConsent() { document.cookie = "consent=true; expires=Fri, 31 Dec 9999 23:59:59 GMT" }
 </script>
 
 <div class="modal fade" id="consentModal" tabindex="-1" role="dialog" aria-labelledby="consentModalLabel" aria-hidden="true">
@@ -12,7 +7,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 			    <div class="modal-title mx-auto">
-                    <img src="/html/img/logos/2016/full.png" class="img-fluid" width="200">
+                    <img src="/html/img/brand/big.png" class="img-fluid" width="200">
                 </div>
 			</div>
 
@@ -54,4 +49,3 @@
 <script type="text/javascript">
     $("#consentModal").modal("show");
 </script>
-<!-- Consent form end -->
