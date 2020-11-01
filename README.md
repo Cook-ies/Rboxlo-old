@@ -55,7 +55,7 @@ If you are seeking to contribute or fix an issue, we ask that all contributors m
 Rboxlo currently has a [code of conduct](https://github.com/lighterlightbulb/Rboxlo/blob/master/CODE_OF_CONDUCT.md) for anyone seeking to contribute. We ask that you read that before engaging in contribution discourse, but it is not required.
 
 # Installation
-Read [INSTALL.md](https://github.com/lighterlightbulb/Rboxlo/blob/master/INSTALL.md) for instructions on how to contribute to Rboxlo.
+Read [INSTALL.md](https://github.com/lighterlightbulb/Rboxlo/blob/master/INSTALL.md) for instructions on install Rboxlo.
 
 # Fair Use
 Copyright Disclaimer under section 107 of the Copyright Act of 1976, allowance is made for “fair use” for purposes such as criticism, comment, news reporting, teaching, scholarship, education and research.
