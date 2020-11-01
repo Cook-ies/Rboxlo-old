@@ -16,7 +16,7 @@
 			build_header("Verify E-Mail");
 		?>
 	</head>
-	<body>
+	<body class="d-flex flex-column">
 		<?php
 			build_js();
 			build_navigation_bar();

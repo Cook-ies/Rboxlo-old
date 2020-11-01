@@ -20,7 +20,7 @@
 		<meta property="og:image:type" content="image/png">
 		<meta property="og:description" content="<?= PROJECT["NAME"] ?> is a recreation of a very popular online brick building game. Only <?= PROJECT["NAME"] ?> allows you to relive childhood memories, create amazing games, and have fun all at the same time. Sign up now!">
 	</head>
-	<body>
+	<body class="d-flex flex-column">
 		<?php
 			build_navigation_bar();
 		?>

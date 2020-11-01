@@ -21,7 +21,7 @@
 			build_header("Landing");
 		?>
 	</head>
-	<body>
+	<body class="d-flex flex-column">
 		<?php
 			build_navigation_bar();
 		?>

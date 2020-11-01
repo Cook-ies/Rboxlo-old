@@ -15,7 +15,7 @@
 			build_header("Games");
 		?>
 	</head>
-	<body>
+	<body class="d-flex flex-column">
 		<?php
 			build_navigation_bar();
 		?>

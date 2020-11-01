@@ -11,7 +11,7 @@
 			build_header("400");
 		?>
 	</head>
-	<body>
+	<body class="d-flex flex-column">
 		<?php
 			build_js();
 			build_navigation_bar();
@@ -37,8 +37,6 @@
 				</div>
             </div>
         </div>
-        
-        <br><br><br><br><br><br><br>
 
 		<?php
 			build_footer();

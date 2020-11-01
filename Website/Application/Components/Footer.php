@@ -1,4 +1,4 @@
-<footer class="page-footer center-on-small-only stylish-color-dark">
+<footer class="page-footer center-on-small-only stylish-color-dark mt-auto">
 	<div class="container pt-3 pb-4">
 		<img src="<?= get_server_host() ?>/html/img/brand/big.png" align="center" class="mx-auto d-block mb-3 mt-0 img-fluid" width="200" >
 		<hr class="border-light-grey">

@@ -24,8 +24,8 @@ body {
 	background: url(/html/img/background.jpg) no-repeat center center fixed;
 }
 .container {
-		padding: 45px 45px 45px 45px;
-		z-index: 550;
+	padding: 45px 45px 45px 45px;
+	z-index: 550;
 }
 .user-text {
 	display: inline-block !important; 
@@ -58,8 +58,8 @@ footer.page-footer a {
 }
 .modal-content {
     /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
-    width:inherit;
-    height:inherit;
+    width: inherit;
+    height: inherit;
     /* To center horizontally */
     margin: 0 auto;
     pointer-events:all;
@@ -72,14 +72,12 @@ footer.page-footer a {
 .news-red {
 	background-color: #ff3636;
 }
-
 .user-headshot {
 	height: 35px;
 	width: 35px;
 	background-position: 45% 3%;
 	background-size: 88px 88px;
 }
-
 html, body {
 	height: 100%;
 }

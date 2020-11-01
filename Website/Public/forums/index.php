@@ -10,7 +10,7 @@
 			build_header("Forums");
 		?>
 	</head>
-	<body>
+	<body class="d-flex flex-column">
 		<?php
 			build_navigation_bar();
 		?>

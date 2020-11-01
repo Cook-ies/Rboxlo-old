@@ -21,7 +21,7 @@
         ?>
     </head>
 
-    <body>
+    <body class="d-flex flex-column">
         <?php
             build_js();
             build_navigation_bar();
@@ -99,7 +99,7 @@
                             <br>
 
                             <?php
-                                if (ENVIRONMENT["PROJECT"]["INVITE_ONLY"]):
+                                if (PROJECT["INVITE_ONLY"]):
                             ?>
                             <div class="card gradient-card">
                                 <a href="/admin/invite">
@@ -121,7 +121,7 @@
                                     <div class="text-white mask purple-gradient-rgba">
                                         <div class="first-content align-self-center p-3">
                                             <span class="card-title font-weight-bold h4">View reports</span>
-                                            <p class="mb-0 h6 font-weight-light">See all reports submitted by the Report Abuse function, past or present, submitted by the glorious community of <?php echo(BASE_NAME); ?></p>
+                                            <p class="mb-0 h6 font-weight-light">See all reports submitted by the Report Abuse function, past or present, submitted by the glorious community of <?= PROJECT["NAME"] ?></p>
                                         </div>
                                     </div>
                                 </a>
