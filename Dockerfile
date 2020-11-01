@@ -5,7 +5,6 @@ RUN apk add nginx
 
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install mysqli
 
 RUN rm -rf /var/www/*
 RUN mkdir /run/nginx
