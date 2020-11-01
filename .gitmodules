@@ -1,3 +1,6 @@
-[submodule "website/application/submodules/phpmailer"]
-	path = website/application/submodules/phpmailer
+[submodule "Website/Submodules/PHPMailer"]
+	path = Website/Submodules/PHPMailer
 	url = https://github.com/PHPMailer/PHPMailer
+[submodule "Website/Submodules/GoogleAuthenticator"]
+	path = Website/Submodules/GoogleAuthenticator
+	url = https://github.com/sonata-project/GoogleAuthenticator
