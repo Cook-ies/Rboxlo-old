@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` text NOT NULL,
   `created` int(11) NOT NULL,
   `next_reward` int(11) NOT NULL,
-  `last_ping` longtext NOT NULL,
+  `last_ping` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`last_ping`)),
   `permissions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`permissions`)),
   `preferences` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`preferences`)),
   `avatar` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`avatar`)),
