@@ -60,20 +60,16 @@
     function get_user_ip()
     {
         if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
-		{
-			if ($_SERVER["REMOTE_ADDR"] != $_SERVER["HTTP_CF_CONNECTING_IP"])
-			{
-				return $_SERVER["HTTP_CF_CONNECTING_IP"];
-			}
-			else
-			{
-				return $_SERVER["REMOTE_ADDR"];
-			}
-		}
-		else
-		{
-			return $_SERVER["REMOTE_ADDR"];
-		}
+        {
+            $cf_ip = trim($_SERVER["HTTP_CF_CONNECTING_IP"]);
+            $remote_ip = trim($_SERVER["REMOTE_ADDR"]);
+
+            return (($remote_ip != $cf_ip) ? $cf_ip : $remote_ip);
+        }
+        else
+        {
+            return $_SERVER["REMOTE_ADDR"];
+        }
     }
 
     function _crypt($string, $mode = "encrypt")
