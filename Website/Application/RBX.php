@@ -107,17 +107,19 @@
         return ($a - floor($a / $b) * $b);
     }
 
-    function compute_name_color($name)
+    function compute_name_color($name, $old_colors = false)
     {
+        $oc = $old_colors;
+
         $name_colors = [
-            ["R" => 253, "G" => 41,  "B" => 67 ], // ["R" => 196, "G" => 40,  "B" => 28  ]
-            ["R" => 1,   "G" => 162, "B" => 255], // ["R" => 13,  "G" => 105, "B" => 172 ]
-            ["R" => 2,   "G" => 184, "B" => 87 ], // ["R" => 39,  "G" => 70,   B" => 45  ]
-            ["R" => 107, "G" => 50,  "B" => 124],
-            ["R" => 218, "G" => 133, "B" => 65 ],
-            ["R" => 245, "G" => 205, "B" => 48 ],
-            ["R" => 232, "G" => 186, "B" => 200],
-            ["R" => 215, "G" => 197, "B" => 154], 
+            $oc ? ["R" => 196, "G" => 40,  "B" => 28 ] : ["R" => 253, "G" => 41,  "B" => 67 ],
+            $oc ? ["R" => 13,  "G" => 105, "B" => 172] : ["R" => 1,   "G" => 162, "B" => 255],
+            $oc ? ["R" => 39,  "G" => 70,  "B" => 45 ] : ["R" => 2,   "G" => 184, "B" => 87 ],
+                  ["R" => 107, "G" => 50,  "B" => 124] ,
+                  ["R" => 218, "G" => 133, "B" => 65 ] ,
+                  ["R" => 245, "G" => 205, "B" => 48 ] ,
+                  ["R" => 232, "G" => 186, "B" => 200] ,
+                  ["R" => 215, "G" => 197, "B" => 154] ,
         ];
 
         $val = 0;
@@ -143,9 +145,9 @@
     }
 
     // Returns a hex value of a given name color
-    function get_name_color($name)
+    function get_name_color($name, $old_colors = false)
     {
-        $color = compute_name_color($name);
+        $color = compute_name_color($name, $old_colors);
         return sprintf("#%02x%02x%02x", $color["R"], $color["G"], $color["B"]);
     }
 
