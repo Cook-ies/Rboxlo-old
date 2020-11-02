@@ -1,0 +1,9 @@
+.head-separator { border-left: 1px solid #CCC }
+
+@media (min-width: 1200px) {
+    .responsive-forum-grid { font-size: 140% }
+}
+
+@media (max-width: 900px) {
+    .responsive-forum-grid { font-size: 1.25vh } /* pushing the limits at this point, go to 1.5vh if you're daring */
+}
