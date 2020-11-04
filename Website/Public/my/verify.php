@@ -94,7 +94,7 @@
 			<?php if ($_SESSION["user"]["email_verified"]): ?>
 
 			<div class="card">
-				<div class="rounded-top mdb-color purple accent-3 pt-3 pl-3 pb-3">
+				<div class="rounded-top mdb-color rboxlo-color-2 pt-3 pl-3 pb-3">
 					<span class="white-text">Verify E-Mail</span>
 				</div>
 				<div class="card-body">
@@ -107,7 +107,7 @@
 			<?php elseif (!isset($_GET["token"])): ?>
 
 			<div class="card">
-				<div class="rounded-top mdb-color purple accent-3 pt-3 pl-3 pb-3">
+				<div class="rounded-top mdb-color rboxlo-color-2 pt-3 pl-3 pb-3">
 					<span class="white-text">Verify E-Mail</span>
 				</div>
 				<div class="card-body">
@@ -137,7 +137,7 @@
 			<?php elseif (!ctype_alnum($_GET["token"])): ?>
 
 			<div class="card">
-				<div class="rounded-top mdb-color purple accent-3 pt-3 pl-3 pb-3">
+				<div class="rounded-top mdb-color rboxlo-color-2 pt-3 pl-3 pb-3">
 					<span class="white-text">Verify E-Mail</span>
 				</div>
 				<div class="card-body">
@@ -152,7 +152,7 @@
 			<?php else: ?>
 
 			<div class="card">
-				<div class="rounded-top mdb-color purple accent-3 pt-3 pl-3 pb-3">
+				<div class="rounded-top mdb-color rboxlo-color-2 pt-3 pl-3 pb-3">
 					<span class="white-text">Verify E-Mail</span>
 				</div>
 				<div class="card-body">

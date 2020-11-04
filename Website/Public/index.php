@@ -39,7 +39,7 @@
 
 				<div class="col-md-6">
 					<div class="card">
-						<div class="card-header purple accent-3 white-text">
+						<div class="card-header rboxlo-color-2 white-text">
 							Create an account
 						</div>
 

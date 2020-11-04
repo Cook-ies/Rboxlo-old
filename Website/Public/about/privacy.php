@@ -28,7 +28,7 @@
 
 		<div class="container">
 			<div class="card">
-				<div class="rounded-top mdb-color purple accent-3 pt-3 pl-3 pb-3">
+				<div class="rounded-top mdb-color rboxlo-color-2 pt-3 pl-3 pb-3">
 					<span class="white-text">Privacy Policy</span>
 				</div>
 				<div class="card-body mx-4">

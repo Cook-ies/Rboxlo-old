@@ -60,6 +60,12 @@ footer.page-footer a {
 }
 html, body { height: 100% }
 
+.rboxlo-color-1 { background-color: #a0f !important }
+.rboxlo-color-2 { background-color: #c75aff !important }
+.rboxlo-color-muted { background-color: #dd98ff !important }
+
+.inherit-color { color: inherit !important; }
+
 /* embedresponsively */
 .embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 

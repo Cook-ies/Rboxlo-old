@@ -21,7 +21,7 @@
 		?>
 
         <div class="container">
-			<ul class="nav nav-tabs nav-justified md-tabs purple accent-3" id="gamesTab" role="tablist">
+			<ul class="nav nav-tabs nav-justified md-tabs rboxlo-color-2" id="gamesTab" role="tablist">
 				<li class="nav-item waves-effect waves-light">
 					<a class="nav-link active" id="places-tab" data-toggle="tab" href="#places" role="tab" aria-controls="places" aria-selected="true">Places</a>
 				</li>
@@ -36,7 +36,7 @@
 					<div class="md-form input-group m-0">
 						<input type="text" class="form-control" placeholder="Search places" aria-label="Search places" aria-describedby="places-search" value="">
 						<div class="input-group-append">
-							<button class="btn btn-md btn-purple purple accent-3 m-0 px-3" type="button" id="places-search">Search</button>
+							<button class="btn btn-md btn-purple rboxlo-color-2 m-0 px-3" type="button" id="places-search">Search</button>
 						</div>
 					</div>
 				</div>

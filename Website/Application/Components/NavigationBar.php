@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark purple accent-4">
+<nav class="navbar navbar-expand-lg navbar-dark rboxlo-color-1">
     <a class="navbar-brand" href="/">
 		<img src="/html/img/brand/big.png" class="img-fluid" width="150">
     </a>

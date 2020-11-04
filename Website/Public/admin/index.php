@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-md-6 col-lg-5">
                     <div class="card">
-                        <div class="card-header purple accent-3 white-text">Administration</div>
+                        <div class="card-header rboxlo-color-2 white-text">Administration</div>
                         
                         <div class="card-body-mx-4 py-4 px-4">
                             <div class="card gradient-card">
@@ -83,7 +83,7 @@
 
                 <div class="col-md-6 col-lg-7 mb-4">
                     <div class="card">
-                        <div class="card-header purple accent-3 white-text">Moderation</div>
+                        <div class="card-header rboxlo-color-2 white-text">Moderation</div>
                         
                         <div class="card-body-mx-4 py-4 px-4">
                             <div class="card gradient-card">

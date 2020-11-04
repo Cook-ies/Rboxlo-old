@@ -20,7 +20,7 @@
         <div class="container">
 			<div class="row flex-center">
                 <div class="card" style="width: 40rem">
-					<div class="card-header purple accent-3 white-text">
+					<div class="card-header rboxlo-color-2 white-text">
                         Error
                     </div>
 
