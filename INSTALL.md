@@ -15,7 +15,7 @@ This guide assumes you have the following tools already installed. If you do not
 5. The server side of Rboxlo is set-up. Run `docker-compose up --build`, and go to localhost to see it in action.
 6. Open Rboxlo.sln.
 7. Build.
-8. The client side of Rboxlo has been built. Arbiter is to be run on your servers hosting Rboxlo, and you distribute the Launcher to those seeking to play the game.e
+8. The client side of Rboxlo has been built. Arbiter is to be run on your servers hosting Rboxlo, and you distribute the Launcher to those seeking to play the game.
 
 # Troubleshooting
 - Rboxlo is set up with `rboxlo.local` everywhere as its default domain. Add all the domains in `Website/NGINX/Domains.conf` in the format `127.0.0.1 {domain}.rboxlo.local` to your hosts file to use Rboxlo to its full potential.

@@ -29,7 +29,7 @@ Some distinct features about Rboxlo:
 - Modern codebase with Docker containerization and optimized, fast, and secure code
 - Easy to set up
 - Public domain software, copyright-free
-- No coporate fellows telling you what is and what isn't allowed
+- No corporate fellows telling you what is and what isn't allowed
 - You can set up your own community in a matter of seconds
 - Open source
 - ... and so much more to come!
