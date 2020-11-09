@@ -26,7 +26,7 @@ COPY Website/PHP.ini /usr/local/etc/php/php.ini
 
 COPY api-keys.json Website/Data/api-keys.json
 
-COPY Website/NGINX/NGINX.conf      /etc/nginx/conf.d/default.conf
+COPY Website/NGINX/Default.conf    /etc/nginx/conf.d/default.conf
 COPY Website/NGINX/Locations.conf  /etc/nginx/snippets/locations.conf
 COPY Website/NGINX/Domains.conf    /etc/nginx/snippets/domains.conf
 COPY Website/NGINX/Custom.conf     /etc/nginx/snippets/custom.conf
