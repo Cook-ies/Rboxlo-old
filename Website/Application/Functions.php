@@ -18,7 +18,7 @@
 
     function include_page($page)
     {
-        require_once($_SERVER["DOCUMENT_ROOT"] . "/../public$page");
+        require_once($_SERVER["DOCUMENT_ROOT"] . "/../Public$page");
         exit();
     }
 
