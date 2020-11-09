@@ -31,7 +31,7 @@ namespace Rboxlo.Launcher
     {
         private static string LocalApplicationData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         private static string CurrentWorkingDirectory = Directory.GetCurrentDirectory();
-        private static string BaseUrl = "http://localhost";
+        private static string BaseUrl = "http://rboxlo.loc";
         private WebClient InternetConnection = new WebClient();
 
         public MainWindow()

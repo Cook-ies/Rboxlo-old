@@ -18,6 +18,6 @@
             "REFERRAL" => (bool)getenv("PROJECT_PRIVATE_REFERRAL"),
             "INVITE_ONLY" => (bool)getenv("PROJECT_PRIVATE_INVITE_ONLY")
         ],
-        "VALID_EMAIL_DOMAINS" => ["rboxlo.xyz", "google.com", "protonmail.ch", "googlemail.com", "gmail.com", "yahoo.com", "yahoomail.com", "protonmail.com", "outlook.com", "hotmail.com", "microsoft.com", "inbox.com", "mail.com", "zoho.com"] // TODO: Move this somewhere else
+        "VALID_EMAIL_DOMAINS" => ["rboxlo.loc", "google.com", "protonmail.ch", "googlemail.com", "gmail.com", "yahoo.com", "yahoomail.com", "protonmail.com", "outlook.com", "hotmail.com", "microsoft.com", "inbox.com", "mail.com", "zoho.com"] // TODO: Move this somewhere else
     ]);
 ?>

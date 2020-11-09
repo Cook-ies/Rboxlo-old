@@ -18,5 +18,5 @@ This guide assumes you have the following tools already installed. If you do not
 8. The client side of Rboxlo has been built. Arbiter is to be run on your servers hosting Rboxlo, and you distribute the Launcher to those seeking to play the game.
 
 # Troubleshooting
-- Rboxlo is set up with `rboxlo.local` everywhere as its default domain. Add all the domains in `Website/NGINX/Domains.conf` in the format `127.0.0.1 {domain}.rboxlo.local` to your hosts file to use Rboxlo to its full potential.
+- Rboxlo is set up with `rboxlo.loc` everywhere as its default domain. Add all the domains in `Website/NGINX/Domains.conf` in the format `127.0.0.1 {domain}.rboxlo.loc` to your hosts file to use Rboxlo to its full potential.
 - If you are in a debugging environment, chances are that you can't access Rboxlo via a secure method such as HTTPS on localhost. This will result in the session cookie not being set, and tons of things breaking. In `Website/PHP.ini`, comment out line 6 (add a pound sign [`#`] at the beginning.)
