@@ -1,4 +1,10 @@
 <?php
+    // Disallow access to pages with ".php"
+	if (ends_with(substr($_SERVER["REQUEST_URI"], 0, strpos($_SERVER["REQUEST_URI"], "?")), ".php"))
+	{
+		include_page("/error/404.php");
+    }
+    
     if (PROJECT["PRIVATE"]["LOCKDOWN"])
     {
         if (!isset($_SESSION["user"]))
