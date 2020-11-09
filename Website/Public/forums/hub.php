@@ -1,5 +1,16 @@
 <?php 
-	require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
+    require_once($_SERVER["DOCUMENT_ROOT"] . "/../Application/Includes.php");
+    
+    open_database_connection($sql);
+    
+    $statement = $sql->prepare("SELECT * FROM `forum_hubs` WHERE `id` = ?");
+    $statement->execute([$_GET["id"]]);
+    $hub = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if (!$hub)
+    {
+        include_page("/error/404.php");
+    }
 ?>
 
 <!DOCTYPE HTML>
@@ -7,7 +18,7 @@
 <html>
 	<head>
 		<?php
-			build_header("Forums");
+			build_header($hub["name"]);
         ?>
         <link rel="stylesheet" href="<?= get_server_host() ?>/html/css/forum.min.css">
 	</head>
@@ -20,7 +31,8 @@
             <div>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb rboxlo-color-muted">
-                        <a class="breadcrumb-item white-text" href="#">Forums</a>
+                        <a class="breadcrumb-item white-text" href="/forums/">Forums</a>
+                        <a class="breadcrumb-item white-text" href="#"><?= $hub["name"] ?></a>
                     </ol>
                 </nav>
             </div>
@@ -37,16 +49,10 @@
                 </div>
             </div>
 
-            <?php
-                open_database_connection($sql);
-
-                $statement = $sql->query("SELECT * FROM `forum_hubs`");
-                foreach ($statement as $hub):
-            ?>
             <div class="card">
                 <div class="rounded-top mdb-color rboxlo-color-2 pt-3 px-3 pb-3 hub-grid">
                     <div class="row">
-                        <div class="white-text col"><a class="inherit-color" href="/forums/hub?id=<?= $hub["id"] ?>"><?= $hub["name"] ?></a></div>
+                        <div class="white-text col"><a class="inherit-color" href="#"><?= $hub["name"] ?></a></div>
                         <div class="white-text col-2 head-separator text-center">Threads</div>
                         <div class="white-text col-2 head-separator text-center">Replies</div>
                         <div class="white-text col-2 head-separator text-center">Last Post</div>
@@ -83,8 +89,6 @@
                 </div>
             </div><br><br>
             <?php
-                endforeach;
-
                 close_database_connection($sql, $statement);
             ?>
 		</div>
