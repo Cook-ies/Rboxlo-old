@@ -41,6 +41,6 @@ RUN ln -s /var/www/Data/Client /var/www/html/api/setup/files
 
 EXPOSE 8080
 
-COPY Website/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY Website/Entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/bin/sh", "/usr/local/bin/entrypoint.sh"]
