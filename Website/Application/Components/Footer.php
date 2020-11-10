@@ -16,7 +16,7 @@
 	<div class="footer-copyright">
 		<div class="container-fluid text-center pt-2 pb-2">
 			<span>
-				<?= PROJECT["NAME"] ?> is made with <i class="material-icons" style="font-size: 1rem" data-toggle="tooltip" title="" data-original-title="lots of love <3">favorite</i> by <a href="<?= REPOSITORY["URL"] ?>/graphs/contributors">many different contributors</a>.
+				<?= PROJECT["NAME"] ?> is made with <i class="material-icons vertical-align-middle pb-2px" data-toggle="tooltip" title="" data-original-title="lots of love <3">favorite</i> by <a href="<?= REPOSITORY["URL"] ?>/graphs/contributors">many different contributors</a>.
 			</span>
 		</div>
 	</div>
