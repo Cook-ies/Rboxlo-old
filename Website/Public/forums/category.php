@@ -59,6 +59,21 @@
                 </nav>
             </div>
 
+            <div class="mb-2 d-flex align-items-center">
+                <?php if (isset($_SESSION["user"])): ?>
+                    <!-- new thread button -->
+                <?php endif; ?>
+
+                <div class="ml-auto">
+                    <div class="md-form input-group m-0">
+                        <input class="form-control" type="text" placeholder="Search" aria-label="Search" aria-describedby="search" value="">
+                        <div class="input-group-append">
+                            <button id="share" class="btn btn-md btn-purple rboxlo-color-2 m-0 px-3" type="button">Go</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="rounded-top mdb-color rboxlo-color-2 pt-3 px-3 pb-3 hub-grid">
                     <div class="row">
