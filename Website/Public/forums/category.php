@@ -215,18 +215,8 @@
                             }
 
                             // Sort through the unique views to create a more realistic view count
-                            $unique_views = [];
-                            foreach ($thread["views"]["rows"] as $view)
-                            {
-                                foreach ($unique_views as $unique_view)
-                                {
-                                    if ($unique_view["ip"] != $view["ip"])
-                                    {
-                                        array_push($unique_views, $view);
-                                    }
-                                }
-                            }
-
+                            $unique_views = array_intersect_key($thread["views"]["rows"], array_unique(array_column($thread["views"]["rows"], "ip")));
+                            
                             $thread["views"]["count"]["raw"] = count($unique_views);
                             $thread["views"]["count"]["human"] = number_format(count($unique_views));
 
