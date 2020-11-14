@@ -35,7 +35,6 @@
     }
 
     $start_from = ($page_number - 1) * $limit;
-    $ip = get_user_ip();
 ?>
 
 <!DOCTYPE HTML>
@@ -99,134 +98,198 @@
                         $statement->execute([$category["id"], $start_from, $limit]);
                         $threads = $statement;
 
-                        // FIXME: THIS IS REALLY TERRIBLE!!!!!!!!
-                        //        WE EXECUTE 6 QUERIES PER THREAD, AND DISPLAY 25 THREADS MAX!!! 6*25=150 QUERIES!!
-                        //        THAT'S THE BEST CASE SCENARIO!! MAXIMUM QUERIES IS 8!! 8*25=200 QUERIES!!
-                        //        ADD THE OTHRE 3 QUERIES, AND YOU HAVE A TOTAL OF 153/203 SQL QUERIES PER PAGE LOAD!!!!!!!!!!!!!!! FIX THIS!!!!
-                        //        SPAM F5 AND BOOM!!! SITE IS DOWN!!
                         foreach ($threads as $thread):
-                            // TODO: Do we need to pre declare everything?
-                            $thread["distinction"] = "unread"; // type-- of ["unread","read"]
-                            $thread["type"] = "thread"; // type-- of ["thread","popular","pinned","locked"]
-                            $thread["author"] = ""; // username of thread author
-                            $thread["views"] = 0; // view count
-                            $thread["replies"] = 0; // reply count
-                            $thread["last_reply"] = [
-                                "created" => date("g:i A", $thread["created"]),
-                                "id" => $thread["id"],
-                                "creator_id" => $thread["creator_id"],
-                                "author" => ""
-                            ]; // last post column
-                            $thread["pages"] = ""; // output for threads stuff
+                            // Fetch replies for this thread
+                            $statement = $sql->prepare("SELECT `id`, `creator_id`, `created` FROM `forum_replies` WHERE `thread_id` = ?");
+                            $statement->execute([$thread["id"]]);
+                            $replies = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                            // fetch username of the thread author
-                            $statement = $sql->prepare("SELECT `username` FROM `users` WHERE `id` = ?"); // Q1
+                            // Fetch views for this thread
+                            $statement = $sql->prepare("SELECT `last_reply`, `ip` FROM `forum_views` WHERE `thread_id` = ?");
+                            $statement->execute([$thread["id"]]);
+                            $views = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                            $thread = array_merge($thread, [
+                                "replies" => [
+                                    "rows" => $replies,
+                                    "count" => [
+                                        "raw" => count($replies),
+                                        "human" => number_format(count($replies))
+                                    ],
+                                    "last" => null
+                                ],
+                                "views" => [
+                                    "rows" => $views,
+                                    "count" => [
+                                        "raw" => count($views),
+                                        "human" => number_format(count($views))
+                                    ]
+                                ],
+                                "distinction" => "unread",
+                                "type" => "thread",
+                                "author" => null
+                            ]);
+                            
+                            // Fetch the author of this thread
+                            $statement = $sql->prepare("SELECT `username` FROM `users` WHERE `id` = ?");
                             $statement->execute([$thread["creator_id"]]);
-                            $thread["author"] = $statement->fetch(PDO::FETCH_ASSOC)["username"]; // set it as such
+                            $thread["author"] = $statement->fetch(PDO::FETCH_ASSOC)["username"];
 
-                            // get the last reply of the thread
-                            $statement = $sql->prepare("SELECT MAX(`id`) FROM `forum_replies` WHERE `thread_id` = ?"); // Q2
-                            $statement->execute([$thread["id"]]);
-                            $id_column = $statement->fetchColumn();
-                            if ($id_column != null) // there is a reply!
+                            // Get the last reply of this thread
+                            if ($thread["replies"]["count"]["raw"] > 0)
                             {
-                                // set the id into the array
-                                $thread["last_reply"]["id"] = intval($id_column);
+                                // Replies exist for this thread, sort through them
+                                $last = null;
+                                foreach ($thread["replies"]["rows"] as $reply)
+                                {
+                                    if ($last == null)
+                                    {
+                                        $last = $reply;
+                                    }
+                                    else
+                                    {
+                                        if ($reply["created"] > $last["created"])
+                                        {
+                                            $last = $reply;
+                                        }
+                                    }
+                                }
+
+                                // Fetch the author for the last reply
+                                $statement = $sql->prepare("SELECT `username` FROM `users` WHERE `id` = ?");
+                                $statement->execute([$last["creator_id"]]);
+                                $last["author"] = $statement->fetch(PDO::FETCH_ASSOC)["username"];
                                 
-                                // fetch the creators id of the reply, and when it was created
-                                $statement = $sql->prepare("SELECT `created`, `creator_id` FROM `forum_replies` WHERE `id` = ?"); // Q2.1
-                                $statement->execute([$thread["last_reply"]["id"]]);
-                                $thread["last_reply"] = array_merge($thread["last_reply"], $statement->fetch(PDO::FETCH_ASSOC)); // TODO: Do we need to merge this? Can we ask DB for id, and just use the entire returned result?
+                                // Format the creation date
+                                $last["created"] = date("g:i A", $last["created"]);
 
-                                // fetch the creators username
-                                $statement = $sql->prepare("SELECT `username` FROM `users` WHERE `id` = ?"); // Q2.2
-                                $statement->execute([$thread["last_reply"]["creator_id"]]);
-                                
-                                $thread["last_reply"]["author"] = $statement->fetch(PDO::FETCH_ASSOC)["username"]; // set last reply author
-                                $thread["last_reply"]["created"] = date("g:i A", $thread["last_reply"]["created"]); // set last reply creation
+                                // Set the last reply
+                                $thread["replies"]["last"] = $last;
                             }
-                            else // there is not a reply, so substitute last post column with the post itself
+                            else
                             {
-                                $thread["last_reply"]["author"] = $thread["author"]; // we fetched the username earlieer, so set the username as the thread author
+                                // No replies exist for this thread, use the thread itself as the last reply
+                                $thread["replies"]["last"] = [
+                                    "created" => date("g:i A", $thread["created"]),
+                                    "id" => $thread["id"],
+                                    "creator_id" => $thread["creator_id"],
+                                    "author" => $thread["author"],
+                                ];
                             }
-
-                            // fetch view count (unique IP only.)
-                            $statement = $sql->prepare("SELECT COUNT(DISTINCT `ip`) FROM `forum_views` WHERE `thread_id` = ?"); // Q3
-                            $statement->execute([$thread["id"]]);
-                            $thread["views"] = number_format(intval($statement->fetchColumn())); // format
-
-                            // fetch reply count
-                            $statement = $sql->prepare("SELECT COUNT(1) FROM `forum_replies` WHERE `thread_id` = ?"); // Q4
-
-                            $thread["replies"] = intval($statement->fetchColumn()); // declare it into thread column but DONT format it into a string yet
-                            if ($thread["replies"] > 25 && !$thread["locked"] && !$thread["pinned"]) // see? we need to do math to see if its popular
+                            
+                            // Get our view
+                            if ($thread["views"]["count"]["raw"] > 0)
                             {
-                                $thread["type"] = "popular"; // if it is popular mark it
-                            }
-                            $thread["replies"] = number_format($thread["replies"]); // NOW format it
+                                // Views exist, are we one of them?
+                                $our_views = []; // all views with our ip
+                                $our_last_view = null; // our view with the highest last_reply
+                                $ip = get_user_ip();
 
-                            // ok, but did we even read this? get last reply that we personally have read
-                            $statement = $sql->prepare("SELECT `last_reply` FROM `forum_views` WHERE `thread_id` = ? AND `ip` = ?"); // Q5
-                            $statement->execute([$thread["id"], $ip]);
+                                foreach ($thread["views"]["rows"] as $view)
+                                {
+                                    if ($view["ip"] == $ip)
+                                    {
+                                        array_push($our_views, $view);
+                                    }
+                                }
 
-                            if ($statement->rowCount() > 0) // if a view entry exists
-                            {
-                                if (($thread["last_reply"]["id"] - intval($statement->fetch(PDO::FETCH_ASSOC)["last_reply"])) < 0) // if the id we last read is higehr than the current last reply, then we have read it
+                                foreach ($our_views as $view)
+                                {
+                                    if ($our_last_view == null)
+                                    {
+                                        $our_last_view = $view;
+                                    }
+                                    else
+                                    {
+                                        if ($our_last_view["reply_id"] <= $view["reply_id"])
+                                        {
+                                            $our_last_view = $view;
+                                        }
+                                    }
+                                }
+
+                                if ($our_last_view["reply_id"] == $replies["last"]["id"])
                                 {
                                     $thread["distinction"] = "read";
                                 }
                             }
 
-                            // we need to put a small pagination. this is like [1, 2, 3, .. last two pages]
-                            // the max pages that can be fully displayed is [1, 2, 3, 4, 5]
-                            // so for example if there is 81 pages, we do [1, 2, 3, ... 80, 81]
-                            $statement = $sql->prepare("SELECT COUNT(1) FROM `forum_replies` WHERE `thread_id` = ?"); // Q6
-                            $statement->execute([$thread["id"]]);
-                            
-                            $replies = intval($statement->fetchColumn()) + 1; // add 1 because technically thread itself counts as an entry
-                            $pages = ceil($replies / 10); // 10 replies displayed per forum post
-
-                            if ($pages > 1)
+                            // Sort through the unique views to create a more realistic view count
+                            $unique_views = [];
+                            foreach ($thread["views"]["rows"] as $view)
                             {
-                                if ($pages <= 5)
+                                foreach ($unique_views as $unique_view)
                                 {
-                                    for ($i = 0; $i < $pages; $i++)
+                                    if ($unique_view["ip"] != $view["ip"])
                                     {
-                                        $thread["pages"] .= ($i . " ");
+                                        array_push($unique_views, $view);
+                                    }
+                                }
+                            }
+
+                            $thread["views"]["count"]["raw"] = count($unique_views);
+                            $thread["views"]["count"]["human"] = number_format(count($unique_views));
+
+                            // Mark the type of thread
+                            if ($thread["replies"]["count"]["raw"] > 25 && !$thread["locked"])
+                            {
+                                $thread["type"] = "popular";
+                            }
+                            elseif ($thread["pinned"]) { $thread["type"] = "pinned"; }
+                            elseif ($thread["locked"]) { $thread["type"] = "locked"; }
+
+                            // Create a mini-pagination HTML output
+                            // The format is the first 3 pages (always 1, 2, 3), and if there are more than 3 pages, put the last 2 pages
+                            // For example, if there is 80 pages, the output will look like "1, 2, 3, ... 79, 80"
+                            // There is a special implementation here though if there is 5 pages EXACTLY. That is so that it will look like "1, 2, 3, 4, 5" and not "1, 2, 3, ... 4, 5"
+                            $true_reply_count = $thread["replies"]["count"]["raw"] + 1; // This is the *true* reply count in that it includes the thread itself as a reply. This is only for pagination.
+                            $thread_pages = ceil($true_reply_count / 10); // 10 replies displayed per forum post
+                            $thread_page_html_out = "";
+
+                            if ($thread_pages == 5)
+                            {
+                                $thread_page_html_out == "1, 2, 3, 4, 5";
+                            }
+                            else if ($thread_pages > 1)
+                            {
+                                if ($thread_pages <= 3)
+                                {
+                                    for ($i = 0; $i < $thread_pages; $i++)
+                                    {
+                                        $thread_page_html_out .= ($i . " ");
                                     }
                                 }
                                 else
                                 {
-                                    for ($i = 0; $i < $pages; $i++)
+                                    for ($i = 0; $i < $thread_pages; $i++)
                                     {
-                                        if ($i > 5)
+                                        if ($i > 3)
                                         {
-                                            $thread["pages"] .= "... "; // ... to collapse other pages,
-                                            break; // and break to stop reading pages
+                                            $thread_page_html_out .= "... ";
+                                            break;
                                         }
-                                        $thread["pages"] .= ($i . " ");//space is delimeter
+                                        $thread_page_html_out .= ($i . " ");
                                     }
 
-                                    if ($i > 5)
+                                    if ($i > 3)
                                     {
-                                        // populate last two pages
-                                        $thread["pages"] .= (($pages - 1) . " ");
-                                        $thread["pages"] .= $pages . " ";
+                                        // Populate the last two pages
+                                        $thread_page_html_out .= (($thread_page_html_out - 1) . " ");
+                                        $thread_page_html_out .= ($thread_pages . " ");
                                     }
-                                }
-
-                                // replace the pages with links for HTML out
-                                if (!empty($thread["pages"]))
-                                {
-                                    // this is an icky parser made to get rid of spread out ickiness
-                                    $thread["pages"] .= ","; // for the parser
-                                    $thread["pages"] = preg_replace("/(\d+) /i", "<a href=\"/forums/thread?id=". $thread["id"] . "&page=${1}\">${1}</a>, ", $thread["pages"]);
-                                    // add commas
-                                    $thread["pages"] = str_replace(">", ">, ", $thread["pages"]);
                                 }
                             }
 
-                            // spit it out
+                            // if you have a keen eye, you may have noticed that we are using just commas and periods; a text-visual representation of the output.
+                            // That is the reason why a "parser" now begins to replace that visual output with actual HTML. This is not the best solution, but the best part is that this will result in much cleaner code.
+                            if (!empty($thread_page_html_out))
+                            {
+                                $thread_page_html_out .= ","; // for the parser to replace everything with a link element
+                                $thread_page_html_out = preg_replace("/(\d+) /i", "<a href=\"/forums/thread?id=". $thread["id"] . "&page=${1}\">${1}</a>, ", $thread_page_html_out);
+                                $thread_page_html_out = str_replace(">", ">, ", $thread_page_html_out); // add the commas for stylistic purposes
+                            }
+
+                            // Now, echo it out
                     ?>
                     <a class="row inherit-color py-2 forum-row" href="/forums/thread?id=<?= $thread["id"] ?>">
                         <div class="col-6 align-self-center d-inline-flex align-items-center">
@@ -235,11 +298,11 @@
                             <?php if (!empty($thread["pages"])): ?> <div><?= $thread["pages"] ?></div> <?php endif; ?>
                         </div>
                         <div class="col align-self-center text-center"><?= safe_out($thread["author"]) ?></div>
-                        <div class="col align-self-center text-center"><?= $thread["replies"] ?></div>
-                        <div class="col align-self-center text-center"><?= $thread["views"] ?></div>
+                        <div class="col align-self-center text-center"><?= $thread["replies"]["count"]["human"] ?></div>
+                        <div class="col align-self-center text-center"><?= $thread["views"]["count"]["human"] ?></div>
                         <div class="col align-self-center text-center">
-                            <b><?= $thread["last_reply"]["created"] ?></b><br>
-                            <?= safe_out($thread["last_reply"]["author"]) ?>
+                            <b><?= $thread["replies"]["last"]["created"] ?></b><br>
+                            <?= safe_out($thread["replies"]["last"]["author"]) ?>
                         </div>
                     </a>
                     <?php

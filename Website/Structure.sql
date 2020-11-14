@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `forum_threads` (
 CREATE TABLE IF NOT EXISTS `forum_views` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `thread_id` int(11) NOT NULL,
-  `last_reply` int(11) NOT NULL,
+  `reply_id` int(11) NOT NULL,
   `time` int(11) NOT NULL,
   `ip` text NOT NULL,
   PRIMARY KEY (`id`)
