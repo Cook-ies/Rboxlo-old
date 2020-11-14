@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `assets` (
 
 CREATE TABLE IF NOT EXISTS `ban_articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `moderator` int(11) NOT NULL,
+  `creator_id` int(11) NOT NULL,
   `reason` text NOT NULL,
   `description` text NOT NULL,
   `evidence` text NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `ban_articles` (
 
 CREATE TABLE IF NOT EXISTS `forum_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hub` int(11) NOT NULL,
+  `hub_id` int(11) NOT NULL,
   `title` text NOT NULL,
   `description` text NOT NULL,
   PRIMARY KEY (`id`)
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS `forum_hubs` (
 CREATE TABLE IF NOT EXISTS `forum_replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `creator_id` int(11) NOT NULL,
-  `category` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
   `content` text NOT NULL,
-  `thread` int(11) NOT NULL,
+  `thread_id` int(11) NOT NULL,
   `created` int(11) NOT NULL,
   `locked` int(11) NOT NULL,
   `pinned` int(11) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `forum_threads` (
   `creator_id` int(11) NOT NULL,
   `title` text NOT NULL,
   `content` text NOT NULL,
-  `category` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
   `created` int(11) NOT NULL,
   `locked` int(11) NOT NULL DEFAULT 0,
   `pinned` int(11) NOT NULL DEFAULT 0,
@@ -78,6 +78,14 @@ CREATE TABLE IF NOT EXISTS `forum_threads` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `forum_views` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_id` int(11) NOT NULL,
+  `last_reply` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `ip` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -141,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `places` (
 
 CREATE TABLE IF NOT EXISTS `servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner` int(11) NOT NULL,
+  `creator_id` int(11) NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `players` int(11) NOT NULL,

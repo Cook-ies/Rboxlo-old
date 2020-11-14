@@ -26,7 +26,10 @@
             </div>
 
             <div class="mb-2 d-flex align-items-center">
-                <span><b>Current time:</b> <?= date("F j Y, g:i A") ?></span>
+                <div class="mr-auto">
+                    <span><b>Current time:</b> <?= date("F j Y, g:i A") ?></span>
+                </div>
+
                 <div class="ml-auto">
                     <div class="md-form input-group m-0">
                         <input class="form-control" type="text" placeholder="Search" aria-label="Search" aria-describedby="search" value="">
@@ -55,26 +58,29 @@
                     
                 <div class="card-body px-3 py-0">
                     <?php
-                        $statement = $sql->prepare("SELECT * FROM `forum_categories` WHERE `hub` = ?");
+                        $statement = $sql->prepare("SELECT * FROM `forum_categories` WHERE `hub_id` = ?");
                         $statement->execute([$hub["id"]]);
                         $categories = $statement;
 
                         foreach ($categories as $category):
+                            $category["threads"] = 0;
+                            $category["replies"] = 0;
+                            
                             // Fetch the replies and posts
-                            $statement = $sql->prepare("SELECT COUNT(1) FROM `forum_threads` WHERE `category` = ?");
+                            $statement = $sql->prepare("SELECT COUNT(1) FROM `forum_threads` WHERE `category_id` = ?");
                             $statement->execute([$category["id"]]);
-                            $threads = number_format(intval($statement->fetchColumn()));
+                            $category["threads"] = number_format(intval($statement->fetchColumn()));
 
-                            $statement = $sql->prepare("SELECT COUNT(1) FROM `forum_replies` WHERE `category` = ?");
+                            $statement = $sql->prepare("SELECT COUNT(1) FROM `forum_replies` WHERE `category_id` = ?");
                             $statement->execute([$category["id"]]);
-                            $replies = number_format(intval($statement->fetchColumn()));
+                            $category["replies"] = number_format(intval($statement->fetchColumn()));
 
                             // Now output
                     ?>
-                    <a class="row inherit-color py-3 hub-row" href="/forums/category?id=<?= $category["id"] ?>">
+                    <a class="row inherit-color py-3 forum-row" href="/forums/category?id=<?= $category["id"] ?>">
                         <div class="col align-self-center"><span><b><?= $category["title"] ?></b></span><br><span><?= $category["description"] ?></div>
-                        <div class="col-2 align-self-center text-center"><?= $threads ?></div>
-                        <div class="col-2 align-self-center text-center"><?= $replies ?></div>
+                        <div class="col-2 align-self-center text-center"><?= $category["threads"] ?></div>
+                        <div class="col-2 align-self-center text-center"><?= $category["replies"] ?></div>
                         <div class="col-2 align-self-center text-center"><b>1:00 PM</b><br>TODO</div>
                     </a>
                     <?php

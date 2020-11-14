@@ -1,21 +1,21 @@
 .head-separator { border-left: 1px solid #FFF }
 .breadcrumb { padding: .5rem 1rem }
 
-.hub-row {
+.forum-row {
     -webkit-transition: background-color #F0F0F0 1s ease-in;
     -moz-transition: background-color #F0F0F0 1s ease-in;
     -o-transition: background-color #F0F0F0 1s ease-in;
     transition: background-color #F0F0F0 1s ease-in;
     border-bottom: 1px solid #ECECEC; /* ;ec */
 }
-.hub-row:hover { background-color: #F0F0F0 }
+.forum-row:hover { background-color: #F0F0F0 }
 
 @media (min-width: 1200px) {
     .hub-grid { font-size: 140% !important }
-    .hub-row { font-size: 105% !important }
+    .forum-row { font-size: 105% !important }
 }
 
 @media (max-width: 900px) {
     .hub-grid { font-size: 1.25vh !important } /* pushing the limits at this point, go to 1.5vh if you're daring */
-    .hub-row { font-size: 1vh !important }
+    .forum-row { font-size: 1vh !important }
 }
