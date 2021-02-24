@@ -9,10 +9,6 @@
 	<img src="https://img.shields.io/github/commit-activity/m/lightbulblighter/Rboxlo" alt="GitHub commit activity">
 </a>
 
-<a href="https://app.fossa.io/projects/git%2Bgithub.com%2Flightbulblighter%2FRboxlo?ref=badge_shield">
-	<img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Flightbulblighter%2FRboxlo.svg?type=shield" alt="FOSSA Status">
-</a>
-
 <a href="https://github.com/lightbulblighter/Rboxlo/blob/master/LICENSE">
 	<img src="https://img.shields.io/github/license/lightbulblighter/Rboxlo" alt="GitHub License">
 </a>
