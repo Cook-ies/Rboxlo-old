@@ -51,7 +51,7 @@ If you would like to suggest a feature or change, submit it as an issue as well;
 
 If you are seeking to contribute or fix an issue, we ask that all contributors mark their contribution as copyright-free to retain the Rboxlo public domain status.
 
-Rboxlo currently has a [contributors guide](https://github.com/lightbulblighter/Rboxlo/blob/master/CODE_OF_CONDUCT.md) for anyone seeking to contribute. We ask that you read that before engaging in contribution discourse, but it is not required.
+Rboxlo currently has a [contributors guide](https://github.com/lightbulblighter/Rboxlo/blob/master/CONTRIBUTING.md) for anyone seeking to contribute. We ask that you read that before engaging in contribution discourse, but it is not required.
 
 # Setting up Rboxlo
 Read [INSTALL.md](https://github.com/lightbulblighter/Rboxlo/blob/master/INSTALL.md) for instructions on how to set-up Rboxlo.
