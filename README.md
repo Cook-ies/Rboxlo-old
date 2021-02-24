@@ -22,8 +22,6 @@
 # Overview
 Rboxlo is an open source decentralized Roblox private server framework, by the people, for the people. Rboxlo is for the individual in that anybody can clone its source code and set up their own private instance. Rboxlo has no ads, has no copyright and has all its source code dedicated to the public domain.
 
-Currently, Rboxlo is not a finished project-- it is a constant work in progress. Do not expect everything from Roblox to be imported on Rboxlo just yet. Rboxlo is still in its infancy.
-
 Rboxlo was created with the intention of allowing anybody to play Roblox games privately without restrictions imposed by anybody but yourself, making it the ultimate free Roblox private server.
 
 Some distinct features about Rboxlo:
@@ -35,6 +33,9 @@ Some distinct features about Rboxlo:
 - You can set up your own community in a matter of seconds
 - Open source
 - ... and so much more to come!
+
+# Disclaimer
+Rboxlo is a constant work in development, and as of right now, is *not ready for production use.* Please do not deploy this to your servers yet. All issues about setting up will be ignored.
 
 # Copyright
 ## License
