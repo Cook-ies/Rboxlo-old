@@ -1,4 +1,4 @@
-FROM php:fpm-alpine
+FROM php:7-fpm-alpine
 
 RUN apk add oniguruma-dev
 RUN apk add nginx
